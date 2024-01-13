@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { StatusCodes } from "http-status-codes";
 import { genSalt, hash } from "bcrypt";
+import { MESSAGES } from "../config/messages.js";
 
 // CONSTANTS
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS);
@@ -11,21 +12,6 @@ const fields = {
   password: 0,
   created_on: 0,
   updated_on: 0,
-};
-
-// MESSAGES
-const MESSAGES = {
-  USER_ALREADY_EXISTS: "User Already Exists ❌ ",
-  USER_CREATED: "User Created ✅ ",
-  USER_FOUND: "User Found ✅ ",
-  USER_NOT_FOUND: "User Not Found ❌ ",
-  USER_UPDATED: "User Updated ✅ ",
-  USER_DELETED: "User Deleted ✅ ",
-  ERROR_CREATING_USER: "Error Creating User ❌ ",
-  ERROR_READING_USER: "Error Reading User ❌ ",
-  ERROR_UPDATING_USER: "Error Updating User ❌ ",
-  ERROR_DELETING_USER: "Error Deleting User ❌ ",
-  INTERNAL_SERVER_ERROR: "Internal Server Error ❌ ",
 };
 
 // DATABASE CONTROLLERS
@@ -107,8 +93,8 @@ const updateUser = async (req, res) => {
       console.log(MESSAGES.USER_UPDATED, { user: user });
       return res.status(StatusCodes.OK).send(user);
     } else {
-      console.log(MESSAGES.USER_NOT_FOUND, { user: user });
-      return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_FOUND);
+      console.log(MESSAGES.USER_NOT_UPDATED, { user: user });
+      return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_UPDATED);
     }
   } catch (error) {
     console.log(MESSAGES.ERROR_UPDATING_USER, { error: error });
@@ -126,8 +112,8 @@ const deleteUser = async (req, res) => {
       console.log(MESSAGES.USER_DELETED, { user: user });
       return res.status(StatusCodes.OK).send(MESSAGES.USER_DELETED);
     } else {
-      console.log(MESSAGES.USER_NOT_FOUND, { user: user });
-      return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_FOUND);
+      console.log(MESSAGES.USER_NOT_DELETED, { user: user });
+      return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_DELETED);
     }
   } catch (error) {
     console.log(MESSAGES.ERROR_DELETING_USER, { error: error });
