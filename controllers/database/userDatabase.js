@@ -1,5 +1,4 @@
 import { USERMODEL } from "../../models/userModel.js";
-import { MESSAGES } from "../../config/messages.js";
 
 // DATABASE OPERATIONS
 
@@ -7,17 +6,14 @@ const createUserDB = async (data) => {
   try {
     const result = await USERMODEL(data).save();
     if (result !== null) {
-      console.log(MESSAGES.USER_CREATED, { userId: result._id });
+      console.log("User Created", { userId: result._id });
       return result;
     } else {
-      console.log(MESSAGES.USER_NOT_CREATED, { userId: result._id });
+      console.log("User Not Created", { userId: result._id });
       return false;
     }
   } catch (error) {
-    console.log(
-      MESSAGES.ERROR_CREATING_USER,
-      ({ data: data }, { error: error })
-    );
+    console.log("Error Creating User", ({ data }, { error }));
     return false;
   }
 };
@@ -26,16 +22,16 @@ const readUserDB = async (query, fields) => {
   try {
     const result = await USERMODEL.find(query).select(fields);
     if (result) {
-      console.log(MESSAGES.USER_READ, { userId: result._id });
+      console.log("User Read", { userId: result._id });
       return result;
     } else {
-      console.log(MESSAGES.USER_NOT_READ, { userId: result._id });
+      console.log("User Not Read", { userId: result._id });
       return false;
     }
   } catch (error) {
-    console.log(MESSAGES.ERROR_READING_USER, {
-      query: query,
-      error: error,
+    console.log("Error Reading User", {
+      query,
+      error,
     });
     return false;
   }
@@ -48,17 +44,14 @@ const updateUserDB = async (query, data, fields) => {
       new: true,
     }).select(fields);
     if (result) {
-      console.log(MESSAGES.USER_UPDATED, { userId: result });
+      console.log("User Updated", { userId: result });
       return result;
     } else {
-      console.log(MESSAGES.USER_NOT_UPDATED, { userId: result });
+      console.log("User Not Updated", { userId: result });
       return false;
     }
   } catch (error) {
-    console.log(
-      MESSAGES.ERROR_UPDATING_USER,
-      ({ query: query }, { data: data }, { error: error })
-    );
+    console.log("Error Updating User", ({ query }, { data }, { error }));
     return false;
   }
 };
@@ -68,17 +61,14 @@ const deleteUserDB = async (query) => {
     const result = await USERMODEL.findOneAndDelete(query);
 
     if (result) {
-      console.log(MESSAGES.USER_DELETED, { userId: result._id });
+      console.log("User Deleted", { userId: result._id });
       return result;
     } else {
-      console.log(MESSAGES.USER_NOT_DELETED, { userId: result._id });
+      console.log("User Not Deleted", { userId: result._id });
       return false;
     }
   } catch (error) {
-    console.log(
-      MESSAGES.ERROR_DELETING_USER,
-      ({ query: query }, { error: error })
-    );
+    console.log("Error Deleting User", ({ query }, { error }));
     return false;
   }
 };

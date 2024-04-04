@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { StatusCodes } from "http-status-codes";
-import { genSalt, hash } from "bcrypt";
-import { MESSAGES } from "../config/messages.js";
+import { genSalt, hash, compare } from "bcrypt";
 
 // CONSTANTS
-const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS);
+const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS, 10);
 const fields = {
   _id: 0,
   __v: 0,
@@ -28,16 +27,14 @@ import {
 const createUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const query = { email: email };
+    const query = { email };
 
     const salt = await genSalt(SALT_ROUNDS);
     const hashedPassword = await hash(password, salt);
 
     const userExists = await READ_USER_DB(query);
     if (userExists.length > 0) {
-      return res
-        .status(StatusCodes.CONFLICT)
-        .send(MESSAGES.USER_ALREADY_EXISTS);
+      return res.status(StatusCodes.CONFLICT).send("User already exists");
     }
 
     const user = await CREATE_USER_DB({
@@ -47,19 +44,19 @@ const createUser = async (req, res) => {
     });
 
     if (user) {
-      console.log(MESSAGES.USER_CREATED, { user: user });
-      return res.status(StatusCodes.CREATED).send(MESSAGES.USER_CREATED);
+      console.log("User Created", { user });
+      return res.status(StatusCodes.CREATED).send("User Created");
     } else {
-      console.log(MESSAGES.ERROR_CREATING_USER, { error: error });
+      console.log("Error Creating User", { error });
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send(MESSAGES.INTERNAL_SERVER_ERROR);
+        .send("Internal Server Error");
     }
   } catch (error) {
-    console.log(MESSAGES.ERROR_CREATING_USER, { error: error });
+    console.log("Error Creating User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -70,17 +67,17 @@ const readUser = async (req, res) => {
     const user = await READ_USER_DB(query, fields);
 
     if (user.length > 0) {
-      console.log(MESSAGES.USER_FOUND, { user: user });
+      console.log("User Found", { user });
       return res.status(StatusCodes.OK).send(user);
     } else {
-      console.log(MESSAGES.USER_NOT_FOUND, { user: user });
-      return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_FOUND);
+      console.log("User Not Found", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Found");
     }
   } catch (error) {
-    console.log(MESSAGES.ERROR_READING_USER, { error: error });
+    console.log("Error Reading User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -90,17 +87,17 @@ const updateUser = async (req, res) => {
     const data = req.body;
     const user = await UPDATE_USER_DB(query, data, fields);
     if (user) {
-      console.log(MESSAGES.USER_UPDATED, { user: user });
+      console.log("User Updated", { user });
       return res.status(StatusCodes.OK).send(user);
     } else {
-      console.log(MESSAGES.USER_NOT_UPDATED, { user: user });
-      return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_UPDATED);
+      console.log("User Not Updated", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Updated");
     }
   } catch (error) {
-    console.log(MESSAGES.ERROR_UPDATING_USER, { error: error });
+    console.log("Error Updating User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -109,17 +106,45 @@ const deleteUser = async (req, res) => {
     const query = { email: req.query.email };
     const user = await DELETE_USER_DB(query);
     if (user) {
-      console.log(MESSAGES.USER_DELETED, { user: user });
+      console.log(MESSAGES.USER_DELETED, { user });
       return res.status(StatusCodes.OK).send(MESSAGES.USER_DELETED);
     } else {
-      console.log(MESSAGES.USER_NOT_DELETED, { user: user });
+      console.log(MESSAGES.USER_NOT_DELETED, { user });
       return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_DELETED);
     }
   } catch (error) {
-    console.log(MESSAGES.ERROR_DELETING_USER, { error: error });
+    console.log(MESSAGES.ERROR_DELETING_USER, { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
+  }
+};
+
+const loginUser = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const query = { email };
+    const user = await READ_USER_DB(query);
+    if (user.length > 0) {
+      const password = req.body.password;
+      const hashedPassword = user[0].password;
+      const isMatch = await compare(password, hashedPassword);
+      if (isMatch) {
+        console.log("User Logged In", { user });
+        return res.status(StatusCodes.OK).send("User Logged In");
+      } else {
+        console.log("User Not Logged In", { user });
+        return res.status(StatusCodes.UNAUTHORIZED).send("User Not Logged In");
+      }
+    } else {
+      console.log("User Not Found", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Found");
+    }
+  } catch (error) {
+    console.log("Error Logging In User", { error });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Internal Server Error");
   }
 };
 
@@ -128,4 +153,5 @@ export {
   readUser as READ_USER,
   updateUser as UPDATE_USER,
   deleteUser as DELETE_USER,
+  loginUser as LOGIN_USER,
 };
