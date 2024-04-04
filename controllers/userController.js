@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { StatusCodes } from "http-status-codes";
 import { genSalt, hash, compare } from "bcrypt";
+import { GENERATEACCESSTOKEN } from "../middlewares/authentication.js";
 
 // CONSTANTS
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS, 10);
@@ -26,8 +27,8 @@ import {
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const query = { email };
+    const { username, email, password } = req.body;
+    const query = { email: email };
 
     const salt = await genSalt(SALT_ROUNDS);
     const hashedPassword = await hash(password, salt);
@@ -38,7 +39,7 @@ const createUser = async (req, res) => {
     }
 
     const user = await CREATE_USER_DB({
-      name,
+      username,
       email,
       password: hashedPassword,
     });
@@ -130,8 +131,15 @@ const loginUser = async (req, res) => {
       const hashedPassword = user[0].password;
       const isMatch = await compare(password, hashedPassword);
       if (isMatch) {
+        const payload = {
+          email: user[0].email,
+          username: user[0].username,
+          id: user[0]._id,
+        };
+        const accessToken = GENERATEACCESSTOKEN(payload);
+
         console.log("User Logged In", { user });
-        return res.status(StatusCodes.OK).send("User Logged In");
+        return res.status(StatusCodes.OK).send({ accessToken });
       } else {
         console.log("User Not Logged In", { user });
         return res.status(StatusCodes.UNAUTHORIZED).send("User Not Logged In");

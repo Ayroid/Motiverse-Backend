@@ -1,48 +1,48 @@
-require("dotenv").config();
-import { sign, decode } from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+import pkg from "jsonwebtoken";
+const { sign, decode } = pkg;
 import { StatusCodes } from "http-status-codes";
 
 // CONSTANTS
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY;
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY;
 
 // Generating Access Token
 
 const generateAccessToken = (payload) => {
-  const token = sign(payload, ACCESS_TOKEN_SECRET, {
+  return sign(payload, ACCESS_TOKEN_SECRET, {
     expiresIn: ACCESS_TOKEN_EXPIRY,
   });
-  return token;
 };
 
 // Generating Refresh Token
 
 const generateRefreshToken = (payload) => {
-  const token = sign(payload, REFRESH_TOKEN_SECRET, {
+  return sign(payload, REFRESH_TOKEN_SECRET, {
     expiresIn: REFRESH_TOKEN_EXPIRY,
   });
-  return token;
 };
 
 // Generating Access Token via Refresh Token
 
 const generateAccessTokenFromRefreshToken = (refreshToken) => {
   const payload = decode(refreshToken, REFRESH_TOKEN_SECRET);
-  const accessToken = generateAccessToken(payload);
-  return accessToken;
+  return generateAccessToken(payload);
 };
 
 // Verify Token
 
 const verifyToken = (req, res, next) => {
   const token = req.headers["authorization"];
-  if (!token)
+  if (!token) {
     return res
       .status(StatusCodes.UNAUTHORIZED)
       .json({ message: "Access denied" });
+  }
   try {
     const decoded = decode(token, ACCESS_TOKEN_SECRET);
     req.user = decoded;
