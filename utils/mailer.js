@@ -7,16 +7,10 @@ const host = process.env.MAIL_HOST;
 const port = process.env.MAIL_PORT;
 const senderMailId = process.env.MAIL_USERNAME;
 const password = process.env.MAIL_PASSWORD;
-const teamMail = process.env.MAIL_TECH_ID;
-
-// PRANAV SIR AND RITIK SIR
-// let cc = ["500086202@stu.upes.ac.in", "500083016@stu.upes.ac.in"];
-// let cc = "500086202@stu.upes.ac.in"
-// ------------------------------------------------------------------------------
 
 /* MAIL TEMPLATES IMPORTING */
 
-import { MAILTEMPLATES } from "./messages/mails.js";
+import { MAILTEMPLATES } from "./mails.js";
 
 const transporter = nodemailer.createTransport({
   host,
@@ -39,8 +33,6 @@ function sendMail(username, email, template) {
     const mailOptions = {
       from: senderMailId,
       to: email,
-      // cc: cc,
-      // bcc: [email, teamMail],
       subject: mailSubject,
       html: mailHtml,
       // attachments: [

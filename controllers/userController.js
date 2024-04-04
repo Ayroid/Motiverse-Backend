@@ -3,6 +3,7 @@ dotenv.config();
 import { StatusCodes } from "http-status-codes";
 import { genSalt, hash, compare } from "bcrypt";
 import { GENERATEACCESSTOKEN } from "../middlewares/authentication.js";
+import { SENDMAIL } from "../utils/mailer.js";
 
 // CONSTANTS
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS, 10);
@@ -15,7 +16,6 @@ const fields = {
 };
 
 // DATABASE CONTROLLERS
-
 import {
   CREATE_USER_DB,
   READ_USER_DB,
@@ -24,7 +24,6 @@ import {
 } from "./database/userDatabase.js";
 
 // CONTROLLERS
-
 const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -46,6 +45,7 @@ const createUser = async (req, res) => {
 
     if (user) {
       console.log("User Created", { user });
+      SENDMAIL(username, email, "REGISTRATION");
       return res.status(StatusCodes.CREATED).send("User Created");
     } else {
       console.log("Error Creating User", { error });
@@ -139,6 +139,7 @@ const loginUser = async (req, res) => {
         const accessToken = GENERATEACCESSTOKEN(payload);
 
         console.log("User Logged In", { user });
+        SENDMAIL(user[0].username, user[0].email, "LOGIN");
         return res.status(StatusCodes.OK).send({ accessToken });
       } else {
         console.log("User Not Logged In", { user });
