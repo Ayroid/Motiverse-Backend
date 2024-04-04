@@ -106,14 +106,14 @@ const deleteUser = async (req, res) => {
     const query = { email: req.query.email };
     const user = await DELETE_USER_DB(query);
     if (user) {
-      console.log(MESSAGES.USER_DELETED, { user });
-      return res.status(StatusCodes.OK).send(MESSAGES.USER_DELETED);
+      console.log("User Deleted", { user });
+      return res.status(StatusCodes.OK).send("User Deleted");
     } else {
-      console.log(MESSAGES.USER_NOT_DELETED, { user });
-      return res.status(StatusCodes.NOT_FOUND).send(MESSAGES.USER_NOT_DELETED);
+      console.log("User Not Deleted", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Deleted");
     }
   } catch (error) {
-    console.log(MESSAGES.ERROR_DELETING_USER, { error });
+    console.log("Error Deleting User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send("Internal Server Error");
