@@ -37,6 +37,6 @@ const shoppingCartSchema = new mongoose.Schema(
 
 // MODEL
 
-const userModel = mongoose.model("shoppingCarts", shoppingCartSchema);
+const shoppingCartsModel = mongoose.model("shoppingCarts", shoppingCartSchema);
 
-export { userModel as USERMODEL };
+export { shoppingCartsModel as SHOPPINGCARTSMODEL };

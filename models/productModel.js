@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    product_avg_rating: {
+    product_rating: {
       type: Number,
       required: true,
     },
@@ -45,6 +45,6 @@ const productSchema = new mongoose.Schema(
 
 // MODEL
 
-const userModel = mongoose.model("products", productSchema);
+const productsModel = mongoose.model("products", productSchema);
 
-export { userModel as USERMODEL };
+export { productsModel as PRODUCTSMODEL };

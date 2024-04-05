@@ -38,6 +38,6 @@ const userOrderSchema = new mongoose.Schema(
 
 // MODEL
 
-const userModel = mongoose.model("userOrders", userOrderSchema);
+const userOrdersModel = mongoose.model("userOrders", userOrderSchema);
 
-export { userModel as USERMODEL };
+export { userOrdersModel as USERORDERMODEL };

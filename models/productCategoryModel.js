@@ -12,18 +12,30 @@ const productCategorySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    parent_category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "productCategories",
+      default: null,
+    },
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "products",
       },
     ],
+    product_stock_quantity: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
 // MODEL
 
-const userModel = mongoose.model("productCategories", productCategorySchema);
+const productCategoryModel = mongoose.model(
+  "productCategories",
+  productCategorySchema
+);
 
-export { userModel as USERMODEL };
+export { productCategoryModel as PRODUCTCATEGORYMODEL };

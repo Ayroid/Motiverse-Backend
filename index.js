@@ -2,8 +2,12 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import Database from "./config/database.js";
-import { USER_ROUTER } from "./routes/userRoute.js";
-import { PRODUCT_ROUTER } from "./routes/productRoute.js";
+
+// ROUTES
+
+import { USER_ROUTER } from "./routes/userRoutes.js";
+import { PRODUCT_CATEGORY_ROUTER } from "./routes/productCategoryRoutes.js";
+import { PRODUCT_ROUTER } from "./routes/productRoutes.js";
 
 // DOTENV CONFIG
 
@@ -17,7 +21,6 @@ const MONGODB_URI = process.env.DEV_MONGODB_URI;
 // DATABASE
 
 const db = new Database(MONGODB_URI);
-
 db.connect();
 
 // APP
@@ -40,6 +43,7 @@ app.use("/api/test", (req, res) => {
 // ROUTES
 
 app.use("/api/user", USER_ROUTER);
+app.use("/api/productCategory", PRODUCT_CATEGORY_ROUTER);
 app.use("/api/product", PRODUCT_ROUTER);
 
 // DATABASE DISCONNECT

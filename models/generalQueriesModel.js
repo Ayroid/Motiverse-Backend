@@ -36,6 +36,9 @@ const generalQueriesSchema = new mongoose.Schema(
 
 // MODEL
 
-const userModel = mongoose.model("generalQueries", generalQueriesSchema);
+const generalQueriesModel = mongoose.model(
+  "generalQueries",
+  generalQueriesSchema
+);
 
-export { userModel as USERMODEL };
+export { generalQueriesModel as GENERALQUERIESMODEL };

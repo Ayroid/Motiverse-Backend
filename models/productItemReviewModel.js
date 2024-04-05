@@ -34,6 +34,9 @@ const productItemReviewSchema = new mongoose.Schema(
 
 // MODEL
 
-const userModel = mongoose.model("productItemReviews", productItemReviewSchema);
+const productItemReviewsModel = mongoose.model(
+  "productItemReviews",
+  productItemReviewSchema
+);
 
-export { userModel as USERMODEL };
+export { productItemReviewsModel as PRODUCTITEMSREVIEWMODEL };

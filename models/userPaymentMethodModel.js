@@ -35,6 +35,9 @@ const userPaymentMethodSchema = new mongoose.Schema(
 
 // MODEL
 
-const userModel = mongoose.model("productQueries", userPaymentMethodSchema);
+const userPaymentMethodsModel = mongoose.model(
+  "userPaymentMethods",
+  userPaymentMethodSchema
+);
 
-export { userModel as USERMODEL };
+export { userPaymentMethodsModel as USERPAYMENTMETHODSMODEL };

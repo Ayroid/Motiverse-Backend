@@ -47,6 +47,9 @@ const productQueriesSchema = new mongoose.Schema(
 
 // MODEL
 
-const userModel = mongoose.model("productQueries", productQueriesSchema);
+const productQueriesModel = mongoose.model(
+  "productQueries",
+  productQueriesSchema
+);
 
-export { userModel as USERMODEL };
+export { productQueriesModel as PRODUCTQUERIESMODEL };
