@@ -52,8 +52,8 @@ const createProductItem = async (req, res) => {
       product_item_description,
       product_item_price,
       product_item_stock_quantity,
-      product_item_image: productImg,
       product_item_rating,
+      product_item_image: productImg,
     });
 
     if (record) {
