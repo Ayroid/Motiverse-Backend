@@ -81,7 +81,9 @@ const createProduct = async (req, res) => {
         product_category_id,
         {
           products: products,
-          product_stock_quantity: productStockQuantity + product_stock_quantity,
+          product_stock_quantity:
+            parseInt(productStockQuantity, 10) +
+            parseInt(product_stock_quantity, 10),
         },
         fields
       );
@@ -185,7 +187,8 @@ const deleteProduct = async (req, res) => {
         {
           products: updatedProducts,
           product_stock_quantity:
-            productStockQuantity - record.product_stock_quantity,
+            parseInt(productStockQuantity, 10) -
+            parseInt(record.product_stock_quantity, 10),
         },
         fields
       );

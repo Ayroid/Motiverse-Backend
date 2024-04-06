@@ -37,12 +37,7 @@ const readDB = async (model, query, fields) => {
 
 const readDBId = async (model, id, fields) => {
   try {
-    console.log("ID", id);
-
     const result = await model.findById(id).select(fields);
-
-    console.log("RESULT", result);
-
     if (result) {
       console.log("Record Read", { recordId: result._id });
       return result;
