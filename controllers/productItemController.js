@@ -26,9 +26,6 @@ import { PRODUCTSMODEL } from "../models/productModel.js";
 // CONTROLLERS
 const createProductItem = async (req, res) => {
   try {
-    console.log(req.body);
-    console.log(req.files);
-
     const {
       product_id,
       product_item_name,
@@ -41,7 +38,9 @@ const createProductItem = async (req, res) => {
 
     let record = await READ_DB(PRODUCTITEMSMODEL, query);
     if (record.length > 0) {
-      return res.status(StatusCodes.CONFLICT).send("Product already exists");
+      return res
+        .status(StatusCodes.CONFLICT)
+        .send("Product Item already exists");
     }
 
     const productImg = `${SERVER_URI}/images/product/${req.files["product_item_image"].filename}`;
@@ -57,14 +56,14 @@ const createProductItem = async (req, res) => {
     });
 
     if (record) {
-      console.log("Product Created", { record });
+      console.log("Product Item Created", { record });
 
       const productRecord = await READ_DB_ID(PRODUCTSMODEL, product_id);
 
       if (!productRecord) {
-        console.log("Product Not Found", { productRecord });
+        console.log("Product Item Not Found", { productRecord });
         await DELETE_DB_ID(PRODUCTITEMSMODEL, record._id);
-        return res.status(StatusCodes.NOT_FOUND).send("Product Not Found");
+        return res.status(StatusCodes.NOT_FOUND).send("Product Item Not Found");
       }
 
       const products = productRecord.product_items;
@@ -86,16 +85,16 @@ const createProductItem = async (req, res) => {
       );
 
       if (updatedProductRecord) {
-        console.log("Product Updated", {
+        console.log("Product Item Updated", {
           updatedProductRecord,
         });
       } else {
-        console.log("Product Not Updated", {
+        console.log("Product Item Not Updated", {
           updatedProductRecord,
         });
       }
 
-      return res.status(StatusCodes.CREATED).send("Product Created");
+      return res.status(StatusCodes.CREATED).send("Product Item Created");
     } else {
       console.log("Error Creating Product", { error });
       return res
@@ -117,11 +116,11 @@ const readProductItem = async (req, res) => {
     const record = await READ_DB(PRODUCTITEMSMODEL, query, fields);
 
     if (record.length > 0) {
-      console.log("Product Found", { record });
+      console.log("Product Item Found", { record });
       return res.status(StatusCodes.OK).send(record);
     } else {
-      console.log("Product Not Found", { record });
-      return res.status(StatusCodes.NOT_FOUND).send("Product Not Found");
+      console.log("Product Item Not Found", { record });
+      return res.status(StatusCodes.NOT_FOUND).send("Product Item Not Found");
     }
   } catch (error) {
     console.log("Error Reading Product", { error });
@@ -137,11 +136,11 @@ const readProductItemById = async (req, res) => {
 
     const record = await READ_DB_ID(PRODUCTITEMSMODEL, id, fields);
     if (record) {
-      console.log("Product Found", { record });
+      console.log("Product Item Found", { record });
       return res.status(StatusCodes.OK).send(record);
     } else {
-      console.log("Product Not Found", { record });
-      return res.status(StatusCodes.NOT_FOUND).send("Product Not Found");
+      console.log("Product Item Not Found", { record });
+      return res.status(StatusCodes.NOT_FOUND).send("Product Item Not Found");
     }
   } catch (error) {
     console.log("Error Reading Product", { error });
@@ -157,11 +156,11 @@ const updateProductItemById = async (req, res) => {
     const data = req.body;
     const record = await UPDATE_DB_ID(PRODUCTITEMSMODEL, id, data, fields);
     if (record) {
-      console.log("Product Updated", { record });
+      console.log("Product Item Updated", { record });
       return res.status(StatusCodes.OK).send(record);
     } else {
-      console.log("Product Not Updated", { record });
-      return res.status(StatusCodes.NOT_FOUND).send("Product Not Updated");
+      console.log("Product Item Not Updated", { record });
+      return res.status(StatusCodes.NOT_FOUND).send("Product Item Not Updated");
     }
   } catch (error) {
     console.log("Error Updating Product", { error });
@@ -176,13 +175,13 @@ const deleteProductItemById = async (req, res) => {
     const id = req.params.id;
     const record = await DELETE_DB_ID(PRODUCTITEMSMODEL, id);
     if (record) {
-      console.log("Product Deleted", { record });
+      console.log("Product Item Deleted", { record });
 
       const productRecord = await READ_DB_ID(PRODUCTSMODEL, record.product_id);
 
       if (!productRecord) {
-        console.log("Product Not Found", { productRecord });
-        return res.status(StatusCodes.NOT_FOUND).send("Product Not Found");
+        console.log("Product Item Not Found", { productRecord });
+        return res.status(StatusCodes.NOT_FOUND).send("Product Item Not Found");
       }
 
       const products = productRecord.product_items;
@@ -206,15 +205,15 @@ const deleteProductItemById = async (req, res) => {
       );
 
       if (updatedProductRecord) {
-        console.log("Product Updated", {
+        console.log("Product Item Updated", {
           updatedProductRecord,
         });
       }
 
-      return res.status(StatusCodes.OK).send("Product Deleted");
+      return res.status(StatusCodes.OK).send("Product Item Deleted");
     } else {
-      console.log("Product Not Deleted", { record });
-      return res.status(StatusCodes.NOT_FOUND).send("Product Not Deleted");
+      console.log("Product Item Not Deleted", { record });
+      return res.status(StatusCodes.NOT_FOUND).send("Product Item Not Deleted");
     }
   } catch (error) {
     console.log("Error Deleting Product", { error });

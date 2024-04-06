@@ -32,6 +32,7 @@ const productSchema = new mongoose.Schema(
     product_rating: {
       type: Number,
       default: 0,
+      max: 5,
     },
     product_items: [
       {

@@ -2,6 +2,7 @@
 
 const createDB = async (model, data) => {
   try {
+    console.log("Creating Record", { data });
     const result = await model(data).save();
     if (result !== null) {
       console.log("Record Created", { recordId: result._id });

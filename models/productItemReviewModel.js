@@ -17,17 +17,12 @@ const productItemReviewSchema = new mongoose.Schema(
     product_item_rating: {
       type: Number,
       required: true,
+      max: 5,
     },
     product_item_review: {
       type: String,
       required: true,
     },
-    product_item_review_images: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
   },
   { timestamps: true }
 );

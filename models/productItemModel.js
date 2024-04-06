@@ -32,6 +32,7 @@ const productItemSchema = new mongoose.Schema(
     product_item_rating: {
       type: Number,
       default: 0,
+      max: 5,
     },
     product_item_reviews: [
       {
