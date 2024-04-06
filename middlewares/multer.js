@@ -9,8 +9,8 @@ const storage = multer.diskStorage({
       case "product_image":
         cb(null, "public/images/product");
         break;
-      case "eventImg":
-        cb(null, "public/images/events");
+      case "product_item_image":
+        cb(null, "public/images/productItem");
         break;
       default:
         cb(null, "public/images/others");
@@ -22,8 +22,11 @@ const storage = multer.diskStorage({
       case "product_image":
         cb(null, `${req.body.product_name}${path.extname(file.originalname)}`);
         break;
-      case "eventImg":
-        cb(null, `${req.body.eventName}${path.extname(file.originalname)}`);
+      case "product_item_image":
+        cb(
+          null,
+          `${req.body.product_item_name}${path.extname(file.originalname)}`
+        );
         break;
       default:
         cb(null, `${req.body.fileName}${path.extname(file.originalname)}`);

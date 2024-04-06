@@ -43,7 +43,7 @@ const createProductCategory = async (req, res) => {
       console.log("Product Category Created", { record });
       return res.status(StatusCodes.CREATED).send("Product Category Created");
     } else {
-      console.log("Error Creating Product Category", { error });
+      console.log("Error Creating Product Category", { record });
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send("Internal Server Error");

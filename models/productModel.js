@@ -27,11 +27,11 @@ const productSchema = new mongoose.Schema(
     },
     product_stock_quantity: {
       type: Number,
-      required: true,
+      default: 0,
     },
     product_rating: {
       type: Number,
-      required: true,
+      default: 0,
     },
     product_items: [
       {

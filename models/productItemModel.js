@@ -31,7 +31,7 @@ const productItemSchema = new mongoose.Schema(
     },
     product_item_rating: {
       type: Number,
-      required: true,
+      default: 0,
     },
     product_item_reviews: [
       {
