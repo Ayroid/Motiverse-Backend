@@ -15,9 +15,7 @@ import {
   CREATE_DB,
   READ_DB,
   READ_DB_ID,
-  UPDATE_DB,
   UPDATE_DB_ID,
-  DELETE_DB,
   DELETE_DB_ID,
 } from "./databaseController.js";
 
@@ -65,7 +63,7 @@ const createProduct = async (req, res) => {
 
       if (!productCategoryRecord) {
         console.log("Product Category Not Found", { productCategoryRecord });
-        await DELETE_DB(PRODUCTSMODEL, { _id: record._id });
+        await DELETE_DB_ID(PRODUCTSMODEL, { _id: record._id });
         return res
           .status(StatusCodes.NOT_FOUND)
           .send("Product Category Not Found");
@@ -134,11 +132,31 @@ const readProduct = async (req, res) => {
   }
 };
 
-const updateProduct = async (req, res) => {
+const readProductById = async (req, res) => {
   try {
-    const query = { _id: req.query.id };
+    const id = req.params.id;
+
+    const record = await READ_DB_ID(PRODUCTSMODEL, id, fields);
+    if (record) {
+      console.log("Product Found", { record });
+      return res.status(StatusCodes.OK).send(record);
+    } else {
+      console.log("Product Not Found", { record });
+      return res.status(StatusCodes.NOT_FOUND).send("Product Not Found");
+    }
+  } catch (error) {
+    console.log("Error Reading Product", { error });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Internal Server Error");
+  }
+};
+
+const updateProductById = async (req, res) => {
+  try {
+    const id = req.params.id;
     const data = req.body;
-    const record = await UPDATE_DB(PRODUCTSMODEL, query, data, fields);
+    const record = await UPDATE_DB_ID(PRODUCTSMODEL, id, data, fields);
     if (record) {
       console.log("Product Updated", { record });
       return res.status(StatusCodes.OK).send(record);
@@ -154,10 +172,10 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req, res) => {
+const deleteProductById = async (req, res) => {
   try {
-    const query = { _id: req.query.id };
-    const record = await DELETE_DB_ID(PRODUCTSMODEL, query);
+    const id = req.params.id;
+    const record = await DELETE_DB_ID(PRODUCTSMODEL, id);
     if (record) {
       console.log("Product Deleted", { record });
 
@@ -215,6 +233,7 @@ const deleteProduct = async (req, res) => {
 export {
   createProduct as CREATE_PRODUCT,
   readProduct as READ_PRODUCT,
-  updateProduct as UPDATE_PRODUCT,
-  deleteProduct as DELETE_PRODUCT,
+  readProductById as READ_PRODUCT_ID,
+  updateProductById as UPDATE_PRODUCT_ID,
+  deleteProductById as DELETE_PRODUCT_ID,
 };
