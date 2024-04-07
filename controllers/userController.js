@@ -18,12 +18,14 @@ const fields = {
 import {
   CREATE_DB,
   READ_DB,
-  UPDATE_DB,
-  DELETE_DB,
+  READ_DB_ID,
+  UPDATE_DB_ID,
+  DELETE_DB_ID,
 } from "./databaseController.js";
 
 // MODEL IMPORT
 import { USERMODEL } from "../models/userModel.js";
+import { SHOPPINGCARTSMODEL } from "../models/shoppingCartModel.js";
 
 // CONTROLLERS
 const createUser = async (req, res) => {
@@ -48,6 +50,17 @@ const createUser = async (req, res) => {
     if (user) {
       console.log("User Created", { user });
       SENDMAIL(username, email, "REGISTRATION");
+
+      const shoppingCart = await CREATE_DB(SHOPPINGCARTSMODEL, {
+        user_id: user._id,
+      });
+
+      if (shoppingCart) {
+        await UPDATE_DB_ID(USERMODEL, user._id, {
+          shopping_cart: shoppingCart._id,
+        });
+      }
+
       return res.status(StatusCodes.CREATED).send("User Created");
     } else {
       console.log("Error Creating User", { error });
@@ -84,11 +97,32 @@ const readUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const readUserById = async (req, res) => {
   try {
-    const query = { email: req.query.email };
+    const id = req.params.id;
+
+    const user = await READ_DB_ID(USERMODEL, id, fields);
+
+    if (user) {
+      console.log("User Found", { user });
+      return res.status(StatusCodes.OK).send(user);
+    } else {
+      console.log("User Not Found", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Found");
+    }
+  } catch (error) {
+    console.log("Error Reading User", { error });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Internal Server Error");
+  }
+};
+
+const updateUserById = async (req, res) => {
+  try {
+    const id = req.params.id;
     const data = req.body;
-    const user = await UPDATE_DB(USERMODEL, query, data, fields);
+    const user = await UPDATE_DB_ID(USERMODEL, id, data, fields);
     if (user) {
       console.log("User Updated", { user });
       return res.status(StatusCodes.OK).send(user);
@@ -104,12 +138,22 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUserById = async (req, res) => {
   try {
-    const query = { email: req.query.email };
-    const user = await DELETE_DB(USERMODEL, query);
+    const id = req.params.id;
+    const user = await DELETE_DB_ID(USERMODEL, id);
     if (user) {
       console.log("User Deleted", { user });
+
+      const shoppingCart = await DELETE_DB_ID(
+        SHOPPINGCARTSMODEL,
+        user.shopping_cart
+      );
+
+      if (shoppingCart) {
+        console.log("Shopping Cart Deleted", { shoppingCart });
+      }
+
       return res.status(StatusCodes.OK).send("User Deleted");
     } else {
       console.log("User Not Deleted", { user });
@@ -162,7 +206,8 @@ const loginUser = async (req, res) => {
 export {
   createUser as CREATE_USER,
   readUser as READ_USER,
-  updateUser as UPDATE_USER,
-  deleteUser as DELETE_USER,
+  readUserById as READ_USER_ID,
+  updateUserById as UPDATE_USER_ID,
+  deleteUserById as DELETE_USER_ID,
   loginUser as LOGIN_USER,
 };

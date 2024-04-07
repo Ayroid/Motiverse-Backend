@@ -11,8 +11,14 @@ const userOrderSchema = new mongoose.Schema(
     },
     order_items: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "productItems",
+        product_item_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "productItems",
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
       },
     ],
     order_total: {
@@ -21,16 +27,20 @@ const userOrderSchema = new mongoose.Schema(
     },
     order_status: {
       type: String,
-      required: true,
-      default: "pending",
+      default: "ordered",
     },
     order_date: {
       type: Date,
-      required: true,
+      default: Date.now,
     },
     order_delivery_date: {
       type: Date,
-      required: true,
+      default: Date.now,
+    },
+    order_payment_method: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "userPaymentMethods",
+      default: null,
     },
   },
   { timestamps: true }

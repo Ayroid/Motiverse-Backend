@@ -10,6 +10,8 @@ import { PRODUCT_CATEGORY_ROUTER } from "./routes/productCategoryRoutes.js";
 import { PRODUCT_ROUTER } from "./routes/productRoutes.js";
 import { PRODUCT_ITEM_ROUTER } from "./routes/productItemRoutes.js";
 import { PRODUCT_ITEM_REVIEW_ROUTER } from "./routes/productItemReviewRoutes.js";
+import { USER_ORDER_ROUTER } from "./routes/userOrderRoutes.js";
+import { SHOPPING_CART_ROUTER } from "./routes/shoppingCartRoutes.js";
 
 // DOTENV CONFIG
 
@@ -49,6 +51,8 @@ app.use("/api/productCategory", PRODUCT_CATEGORY_ROUTER);
 app.use("/api/product", PRODUCT_ROUTER);
 app.use("/api/productItem", PRODUCT_ITEM_ROUTER);
 app.use("/api/productItemReview", PRODUCT_ITEM_REVIEW_ROUTER);
+app.use("/api/userOrder", USER_ORDER_ROUTER);
+app.use("/api/shoppingCart", SHOPPING_CART_ROUTER);
 
 // DATABASE DISCONNECT
 

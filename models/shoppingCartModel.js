@@ -26,10 +26,10 @@ const shoppingCartSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     },
-    product_items: [cartItemSchema],
+    cart_items: [cartItemSchema],
     subtotal: {
       type: Number,
-      required: true,
+      default: 0,
     },
   },
   { timestamps: true }

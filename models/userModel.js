@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
     shopping_cart: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "shoppingCarts",
+      default: null,
     },
     orders: [
       {
