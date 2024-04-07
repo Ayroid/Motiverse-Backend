@@ -14,12 +14,10 @@ const productQueriesSchema = new mongoose.Schema(
       ref: "productItems",
       required: true,
     },
-    product_item_images: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    product_query_images: {
+      type: String,
+      required: true,
+    },
     query_title: {
       type: String,
       required: true,

@@ -25,6 +25,7 @@ const generalQueriesSchema = new mongoose.Schema(
     query_initiation_date: {
       type: Date,
       required: true,
+      default: Date.now,
     },
     query_completion_date: {
       type: Date,
